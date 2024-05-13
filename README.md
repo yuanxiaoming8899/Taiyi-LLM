@@ -969,63 +969,7 @@ scipy" tabindex="0" role="button">
 <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenizer</span>.<span class="pl-en">batch_decode</span>(<span class="pl-s1">outputs</span>)
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>[<span class="pl-c1">0</span>])
 <span class="pl-c">#&lt;|endoftext|&gt;Hi，could you please introduce yourself？&lt;|endoftext|&gt;Hello! My name is Taiyi,.....&lt;|endoftext|&gt;</span></pre><div class="zeroclipboard-container">
-    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 tooltipped-no-delay d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
-
-model_name = &quot;DUTIR-BioNLP/Taiyi-LLM&quot;
-
-device = 'cuda:0'
-
-model = AutoModelForCausalLM.from_pretrained(
-    model_name,
-    low_cpu_mem_usage=True,
-    torch_dtype=torch.float16,
-    trust_remote_code=True,
-    device_map = device
-)
-
-
-model.eval()
-tokenizer = AutoTokenizer.from_pretrained(
-    model_name,
-    trust_remote_code=True
-)
-
-import logging
-logging.disable(logging.WARNING)
-tokenizer.pad_token_id = tokenizer.eod_id
-tokenizer.bos_token_id = tokenizer.eod_id
-tokenizer.eos_token_id = tokenizer.eod_id
-history_token_ids = torch.tensor([[]], dtype=torch.long)
-max_new_tokens = 500
-top_p = 0.9
-temperature = 0.3
-repetition_penalty = 1.0
-
-# begin chat
-history_max_len = 1000 
-utterance_id = 0
-history_token_ids = None
-
-user_input = &quot;Hi，could you please introduce yourself？&quot;
-
-input_ids = tokenizer(user_input, return_tensors=&quot;pt&quot;, add_special_tokens=False).input_ids
-bos_token_id = torch.tensor([[tokenizer.bos_token_id]], dtype=torch.long)
-eos_token_id = torch.tensor([[tokenizer.eos_token_id]], dtype=torch.long)
-user_input_ids = torch.concat([bos_token_id,input_ids, eos_token_id], dim=1)
-
-
-model_input_ids = user_input_ids.to(device)
-with torch.no_grad():
-    outputs = model.generate(
-        input_ids=model_input_ids, max_new_tokens=max_new_tokens, do_sample=True, top_p=top_p,
-        temperature=temperature, repetition_penalty=repetition_penalty, eos_token_id=tokenizer.eos_token_id
-    )
-
-response = tokenizer.batch_decode(outputs)
-print(response[0])
-#<|endoftext|>Hi，could you please introduce yourself？<|endoftext|>Hello! My name is Taiyi,.....<|endoftext|>" tabindex="0" role="button">
+    
       <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
     <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
 </svg>
